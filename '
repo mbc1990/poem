@@ -1,0 +1,36 @@
+from random import randint
+import nltk
+from nltk.tokenize import word_tokenize, sent_tokenize
+
+
+corpuses = ['god_and_the_state.txt']
+#corpuses = ['dummy_corpus.txt']
+tmap = {}
+
+def build_model(tokens, n):
+    global tmap
+    for i in range(0, len(tokens) - n):
+        if tuple(tokens[i:i+n]) not in tmap:
+            tmap[tuple(tokens[i:i+n])] = []
+        tmap[tuple(tokens[i:i+n])].append(tokens[i+n])
+    for k in tmap:
+        print str(k) + " --> "+str(tmap[k])
+
+def generate_text(n, length):
+    keys = tmap.keys()
+    start = keys[randint(0, len(keys))]
+    ret = list(start)
+    print ret
+    
+
+def main():
+    print "hello"
+    for c in corpuses:
+        with open(c) as fd:
+            content = fd.read()
+            tokens = [word for sent in sent_tokenize(content) for word in word_tokenize(sent)] 
+            build_model(tokens, 2)
+
+
+if __name__ == "__main__":
+    main()
